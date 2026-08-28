@@ -99,16 +99,19 @@ export default function AdminDashboard() {
   const [logins, setLogins] = useState([]);
   const [authed, setAuthed] = useState(isAdminAuthenticated());
 
-  function refresh() {
-    setRegistrations(getRegistrations());
-    setLogins(getLogins());
+  async function refresh() {
+    const [regs, logs] = await Promise.all([getRegistrations(), getLogins()]);
+    setRegistrations(regs);
+    setLogins(logs);
   }
 
   useEffect(() => {
     refresh();
-    const onStorage = () => refresh();
+    const onStorage = () => {
+      refresh();
+    };
     window.addEventListener("storage", onStorage);
-    const timer = setInterval(refresh, 1500);
+    const timer = setInterval(refresh, 3000);
     return () => {
       window.removeEventListener("storage", onStorage);
       clearInterval(timer);
@@ -128,7 +131,7 @@ export default function AdminDashboard() {
     <div className="admin-page admin-page--dash">
       <header className="admin-top">
         <div>
-          <p className="admin-eyebrow">Récolte · admin local</p>
+          <p className="admin-eyebrow">Récolte · admin</p>
           <h1>Espace administrateur</h1>
         </div>
         <div className="admin-actions">
@@ -154,9 +157,9 @@ export default function AdminDashboard() {
           <button
             className="admin-ghost"
             type="button"
-            onClick={() => {
+            onClick={async () => {
               if (!window.confirm("Effacer toutes les inscriptions ?")) return;
-              clearRegistrations();
+              await clearRegistrations();
               setRegistrations([]);
             }}
           >
@@ -167,9 +170,9 @@ export default function AdminDashboard() {
           rows={registrations}
           dateHeader="Date / heure inscription"
           emptyText="Aucune inscription. Sur une page factice, clique « S’inscrire » / « Créer un compte », remplis user + mdp, puis valide."
-          onDelete={(id, identifier) => {
+          onDelete={async (id, identifier) => {
             if (!window.confirm(`Supprimer l’inscription « ${identifier || "?"} » ?`)) return;
-            setRegistrations(deleteRegistration(id));
+            setRegistrations(await deleteRegistration(id));
           }}
         />
       </section>
@@ -186,9 +189,9 @@ export default function AdminDashboard() {
           <button
             className="admin-ghost"
             type="button"
-            onClick={() => {
+            onClick={async () => {
               if (!window.confirm("Effacer toutes les connexions ?")) return;
-              clearLogins();
+              await clearLogins();
               setLogins([]);
             }}
           >
@@ -199,9 +202,9 @@ export default function AdminDashboard() {
           rows={logins}
           dateHeader="Date / heure connexion"
           emptyText="Aucune connexion. Sur une page factice, reste en mode « Se connecter », saisis user/mobile + mdp, puis valide."
-          onDelete={(id, identifier) => {
+          onDelete={async (id, identifier) => {
             if (!window.confirm(`Supprimer la connexion « ${identifier || "?"} » ?`)) return;
-            setLogins(deleteLogin(id));
+            setLogins(await deleteLogin(id));
           }}
         />
       </section>

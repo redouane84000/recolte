@@ -7,6 +7,8 @@ import {
   REGISTRATIONS_KEY,
 } from "./config";
 
+const ADMIN_PASS_KEY = "recolte_admin_pass";
+
 export function loginAdmin(username, password) {
   const user = String(username || "").trim().toLowerCase();
   const pass = String(password || "").trim();
@@ -15,16 +17,29 @@ export function loginAdmin(username, password) {
     pass.toLowerCase() === ADMIN_PASS.toLowerCase();
   if (ok) {
     sessionStorage.setItem(ADMIN_SESSION_KEY, "1");
+    sessionStorage.setItem(ADMIN_PASS_KEY, pass);
   }
   return ok;
 }
 
 export function logoutAdmin() {
   sessionStorage.removeItem(ADMIN_SESSION_KEY);
+  sessionStorage.removeItem(ADMIN_PASS_KEY);
 }
 
 export function isAdminAuthenticated() {
   return sessionStorage.getItem(ADMIN_SESSION_KEY) === "1";
+}
+
+function getAdminPass() {
+  return sessionStorage.getItem(ADMIN_PASS_KEY) || "";
+}
+
+function adminHeaders() {
+  return {
+    "Content-Type": "application/json",
+    "x-admin-pass": getAdminPass(),
+  };
 }
 
 function readList(key) {
@@ -57,34 +72,90 @@ function migrateLegacyCaptures() {
   localStorage.removeItem(LEGACY_CAPTURES_KEY);
 }
 
-export function getRegistrations() {
-  return readList(REGISTRATIONS_KEY);
+async function fetchStore() {
+  try {
+    const res = await fetch("/api/captures", {
+      headers: adminHeaders(),
+    });
+    if (!res.ok) throw new Error("api");
+    return await res.json();
+  } catch {
+    migrateLegacyCaptures();
+    return {
+      registrations: readList(REGISTRATIONS_KEY),
+      logins: readList(LOGINS_KEY),
+    };
+  }
 }
 
-export function getLogins() {
-  migrateLegacyCaptures();
-  return readList(LOGINS_KEY);
+export async function getRegistrations() {
+  const store = await fetchStore();
+  return store.registrations || [];
 }
 
-export function clearRegistrations() {
-  localStorage.removeItem(REGISTRATIONS_KEY);
+export async function getLogins() {
+  const store = await fetchStore();
+  return store.logins || [];
 }
 
-export function clearLogins() {
-  localStorage.removeItem(LOGINS_KEY);
-  localStorage.removeItem(LEGACY_CAPTURES_KEY);
+export async function clearRegistrations() {
+  try {
+    await fetch("/api/captures", {
+      method: "DELETE",
+      headers: adminHeaders(),
+      body: JSON.stringify({ type: "registrations" }),
+    });
+  } catch {
+    localStorage.removeItem(REGISTRATIONS_KEY);
+  }
 }
 
-export function deleteRegistration(id) {
-  return writeList(
-    REGISTRATIONS_KEY,
-    getRegistrations().filter((item) => item.id !== id)
-  );
+export async function clearLogins() {
+  try {
+    await fetch("/api/captures", {
+      method: "DELETE",
+      headers: adminHeaders(),
+      body: JSON.stringify({ type: "logins" }),
+    });
+  } catch {
+    localStorage.removeItem(LOGINS_KEY);
+    localStorage.removeItem(LEGACY_CAPTURES_KEY);
+  }
 }
 
-export function deleteLogin(id) {
-  return writeList(
-    LOGINS_KEY,
-    getLogins().filter((item) => item.id !== id)
-  );
+export async function deleteRegistration(id) {
+  try {
+    const res = await fetch("/api/captures", {
+      method: "DELETE",
+      headers: adminHeaders(),
+      body: JSON.stringify({ type: "registrations", id }),
+    });
+    if (!res.ok) throw new Error("api");
+    const data = await res.json();
+    return data.list || [];
+  } catch {
+    return writeList(
+      REGISTRATIONS_KEY,
+      (await getRegistrations()).filter((item) => item.id !== id)
+    );
+  }
+}
+
+export async function deleteLogin(id) {
+  try {
+    const res = await fetch("/api/captures", {
+      method: "DELETE",
+      headers: adminHeaders(),
+      body: JSON.stringify({ type: "logins", id }),
+    });
+    if (!res.ok) throw new Error("api");
+    const data = await res.json();
+    return data.list || [];
+  } catch {
+    migrateLegacyCaptures();
+    return writeList(
+      LOGINS_KEY,
+      (await getLogins()).filter((item) => item.id !== id)
+    );
+  }
 }
